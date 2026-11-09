@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI SND ADX PROFIT HUNTER</title>
+<style>
+body{background:#08111f;color:white;font-family:Arial;padding:18px}
+h2{color:#42e6ad;text-align:center}
+.card{background:#17263a;padding:18px;border-radius:12px;margin:15px 0}
+input,select,button{width:100%;padding:13px;margin:7px 0;box-sizing:border-box;border-radius:8px}
+button{background:#42e6ad;font-weight:bold}
+#signal{text-align:center;font-size:28px;font-weight:bold}
+</style>
+</head>
+<body>
+<h2>AI SND ADX</h2>
+<h3 style="text-align:center">PROFIT HUNTER</h3>
+<div class="card">
+<label>Instrument</label>
+<select id="market"><option>XAUUSD GOLD</option><option>WTI</option></select>
+<label>Timeframe</label>
+<select id="tf"><option>M1</option><option>M5</option><option>M15</option><option>M30</option><option>H1</option></select>
+<label>Current Price</label>
+<input id="price" type="number" placeholder="Current price">
+<label>Zone</label>
+<select id="zone"><option value="demand">DEMAND</option><option value="supply">SUPPLY</option></select>
+<label>Zone Low</label>
+<input id="low" type="number">
+<label>Zone High</label>
+<input id="high" type="number">
+<label>Candle</label>
+<select id="candle"><option value="bull">BULLISH</option><option value="bear">BEARISH</option></select>
+<label>ADX</label>
+<input id="adx" type="number" placeholder="ADX value">
+<label>ADX Direction</label>
+<select id="direction"><option value="up">RISING</option><option value="down">FALLING</option></select>
+<label>Stop Loss</label>
+<input id="sl" type="number">
+<button onclick="check()">ANALYZE MARKET</button>
+</div>
+<div class="card">
+<h3>TRADING SIGNAL</h3>
+<div id="signal">WAIT</div>
+<p id="detail">Waiting for market data.</p>
+<p id="targets"></p>
+</div>
+<script>
+function check(){
+let p=+price.value,l=+low.value,h=+high.value;
+let a=+adx.value,s=+sl.value;
+let buy=zone.value==="demand"&&candle.value==="bull";
+let sell=zone.value==="supply"&&candle.value==="bear";
+let ok=p>=l&&p<=h&&a>=18&&direction.value==="up";
+let sig=buy&&ok?"BUY":sell&&ok?"SELL":"WAIT";
+signal.innerText=sig;
+signal.style.color=sig==="BUY"?"#42e6ad":sig==="SELL"?"#ff6678":"#ffd166";
+detail.innerText=sig==="WAIT"?"Setup belum lengkap atau di luar zon SND.":"Candle mengesahkan zon SND dan ADX meningkat.";
+targets.innerText="";
+if(sig!=="WAIT"&&s>0&&((buy&&s<p)||(sell&&s>p))){
+let r=Math.abs(p-s),d=buy?1:-1;
+targets.innerText="ENTRY: "+p+"\nSL: "+s+"\nTP1: "+(p+d*r).toFixed(3)+"\nTP2: "+(p+d*r*2).toFixed(3)+"\nTP3: "+(p+d*r*3).toFixed(3);
+}
+}
+</script>
+</body>
+</html>
